@@ -1,9 +1,22 @@
 use std::ops;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Grid<T> {
+    pub inner: Vec<Vec<T>>,
+}
+
+impl<T> Grid<T> {
+    pub fn new(inner: Vec<Vec<T>>) -> Self {
+        Self { inner }
+    }
+    pub fn get(&self, pos: Pos) -> Option<&T> {
+        self.inner.get(pos.1).and_then(|row| row.get(pos.0))
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct Vec2D(pub isize, pub isize);
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct Pos(pub usize, pub usize);
 
 impl ops::Add<Vec2D> for Pos {
@@ -36,3 +49,31 @@ pub const DIRECTIONS: [Vec2D; 8] = [
 
 pub const CROSS_DIRECTIONS: [Vec2D; 4] = [Vec2D(1, 1), Vec2D(1, -1), Vec2D(-1, 1), Vec2D(-1, -1)];
 pub const UNIT_DIRECTIONS: [Vec2D; 4] = [Vec2D(1, 0), Vec2D(-1, 0), Vec2D(0, 1), Vec2D(0, -1)];
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
+}
+
+impl Direction {
+    pub fn unit_direction(&self) -> Vec2D {
+        match self {
+            Direction::Up => Vec2D(0, -1),
+            Direction::Down => Vec2D(0, 1),
+            Direction::Left => Vec2D(-1, 0),
+            Direction::Right => Vec2D(1, 0),
+        }
+    }
+
+    pub fn turned_right(&self) -> Direction {
+        match self {
+            Direction::Up => Direction::Right,
+            Direction::Down => Direction::Left,
+            Direction::Left => Direction::Up,
+            Direction::Right => Direction::Down,
+        }
+    }
+}
