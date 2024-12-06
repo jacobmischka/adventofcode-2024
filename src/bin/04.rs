@@ -3,21 +3,23 @@ use std::io;
 use adventofcode_2024::*;
 
 pub fn main() {
-    let grid: Vec<Vec<char>> = io::stdin()
-        .lines()
-        .filter_map(|line| {
-            let line = line.unwrap();
-            if line.is_empty() {
-                None
-            } else {
-                Some(line.chars().collect())
-            }
-        })
-        .collect();
+    let grid = Grid::new(
+        io::stdin()
+            .lines()
+            .filter_map(|line| {
+                let line = line.unwrap();
+                if line.is_empty() {
+                    None
+                } else {
+                    Some(line.chars().collect())
+                }
+            })
+            .collect(),
+    );
 
     let mut part1 = 0;
     let mut part2 = 0;
-    for (y, line) in grid.iter().enumerate() {
+    for (y, line) in grid.inner.iter().enumerate() {
         for (x, c) in line.iter().enumerate() {
             match *c {
                 'X' => {
@@ -53,10 +55,10 @@ pub fn main() {
     println!("Part 2: {part2}");
 }
 
-fn word_exists_at(grid: &Vec<Vec<char>>, word: &str, pos: Pos, vector: Vec2D) -> bool {
+fn word_exists_at(grid: &Grid<char>, word: &str, pos: Pos, vector: Vec2D) -> bool {
     let mut cur = pos;
     for (i, c) in word.chars().enumerate() {
-        match grid.get(cur.1).and_then(|row| row.get(cur.0)) {
+        match grid.get(cur) {
             Some(x) if *x == c => {}
             _ => {
                 return false;
