@@ -19,12 +19,31 @@ pub struct Vec2D(pub isize, pub isize);
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct Pos(pub usize, pub usize);
 
+impl Pos {
+    pub fn dist(&self, other: Pos) -> Vec2D {
+        Vec2D(
+            other.0 as isize - self.0 as isize,
+            other.1 as isize - self.1 as isize,
+        )
+    }
+}
+
 impl ops::Add<Vec2D> for Pos {
     type Output = Option<Pos>;
     fn add(self, rhs: Vec2D) -> Self::Output {
         Some(Pos(
             self.0.checked_add_signed(rhs.0)?,
             self.1.checked_add_signed(rhs.1)?,
+        ))
+    }
+}
+
+impl ops::Sub<Vec2D> for Pos {
+    type Output = Option<Pos>;
+    fn sub(self, rhs: Vec2D) -> Self::Output {
+        Some(Pos(
+            self.0.checked_add_signed(rhs.0 * -1)?,
+            self.1.checked_add_signed(rhs.1 * -1)?,
         ))
     }
 }
