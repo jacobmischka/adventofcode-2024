@@ -48,6 +48,15 @@ impl ops::Sub<Vec2D> for Pos {
     }
 }
 
+impl Pos {
+    pub fn wrapping_add(self, rhs: Vec2D, bounds: (usize, usize)) -> Pos {
+        Pos(
+            (self.0 + bounds.0.checked_add_signed(rhs.0).unwrap()) % bounds.0,
+            (self.1 + bounds.1.checked_add_signed(rhs.1).unwrap()) % bounds.1,
+        )
+    }
+}
+
 impl ops::Mul<isize> for Vec2D {
     type Output = Vec2D;
     fn mul(self, rhs: isize) -> Self::Output {
