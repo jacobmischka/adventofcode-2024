@@ -23,7 +23,7 @@ pub fn main() {
         for (x, c) in line.iter().enumerate() {
             match *c {
                 'X' => {
-                    for dir in DIRECTIONS {
+                    for dir in COMPASS_DIRECTIONS {
                         if word_exists_at(&grid, "XMAS", Pos(x, y), dir) {
                             part1 += 1;
                         }
@@ -31,7 +31,7 @@ pub fn main() {
                 }
                 'A' => {
                     let mut crosses = 0;
-                    for dir in CROSS_DIRECTIONS {
+                    for dir in ORDINAL_DIRECTIONS {
                         if let Some(corner) = Pos(x, y) + dir {
                             if word_exists_at(&grid, "MAS", corner, dir * -1) {
                                 crosses += 1;

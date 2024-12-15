@@ -55,7 +55,7 @@ impl ops::Mul<isize> for Vec2D {
     }
 }
 
-pub const DIRECTIONS: [Vec2D; 8] = [
+pub const COMPASS_DIRECTIONS: [Vec2D; 8] = [
     Vec2D(1, 0),
     Vec2D(1, 1),
     Vec2D(0, 1),
@@ -66,8 +66,15 @@ pub const DIRECTIONS: [Vec2D; 8] = [
     Vec2D(1, -1),
 ];
 
-pub const CROSS_DIRECTIONS: [Vec2D; 4] = [Vec2D(1, 1), Vec2D(1, -1), Vec2D(-1, 1), Vec2D(-1, -1)];
-pub const UNIT_DIRECTIONS: [Vec2D; 4] = [Vec2D(1, 0), Vec2D(-1, 0), Vec2D(0, 1), Vec2D(0, -1)];
+pub const ORDINAL_DIRECTIONS: [Vec2D; 4] = [Vec2D(1, 1), Vec2D(1, -1), Vec2D(-1, 1), Vec2D(-1, -1)];
+pub const CARDINAL_DIRECTIONS: [Vec2D; 4] = [Vec2D(1, 0), Vec2D(-1, 0), Vec2D(0, 1), Vec2D(0, -1)];
+
+pub const DIRECTIONS: [Direction; 4] = [
+    Direction::Up,
+    Direction::Right,
+    Direction::Down,
+    Direction::Left,
+];
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum Direction {
@@ -93,6 +100,24 @@ impl Direction {
             Direction::Down => Direction::Left,
             Direction::Left => Direction::Up,
             Direction::Right => Direction::Down,
+        }
+    }
+
+    pub fn turned_left(&self) -> Direction {
+        match self {
+            Direction::Up => Direction::Left,
+            Direction::Down => Direction::Right,
+            Direction::Left => Direction::Down,
+            Direction::Right => Direction::Up,
+        }
+    }
+
+    pub fn reversed(&self) -> Direction {
+        match self {
+            Direction::Up => Direction::Down,
+            Direction::Down => Direction::Up,
+            Direction::Left => Direction::Right,
+            Direction::Right => Direction::Left,
         }
     }
 }

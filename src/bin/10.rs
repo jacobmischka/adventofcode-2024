@@ -49,7 +49,7 @@ fn walk_trail(grid: &Grid<u8>, pos: Pos) -> Vec<Pos> {
             return vec![pos];
         }
 
-        UNIT_DIRECTIONS
+        CARDINAL_DIRECTIONS
             .into_iter()
             .filter_map(|dir| {
                 (pos + dir).and_then(|next_pos| {
