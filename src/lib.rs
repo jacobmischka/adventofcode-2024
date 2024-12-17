@@ -1,4 +1,4 @@
-use std::ops;
+use std::{fmt::Display, mem, ops};
 
 pub struct Grid<T> {
     pub inner: Vec<Vec<T>>,
@@ -10,6 +10,24 @@ impl<T> Grid<T> {
     }
     pub fn get(&self, pos: Pos) -> Option<&T> {
         self.inner.get(pos.1).and_then(|row| row.get(pos.0))
+    }
+    pub fn set(&mut self, pos: Pos, value: T) -> Option<T> {
+        self.inner
+            .get_mut(pos.1)
+            .and_then(|row| row.get_mut(pos.0).map(|v| mem::replace(v, value)))
+    }
+}
+
+impl<T: Display> Display for Grid<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for row in &self.inner {
+            for v in row {
+                write!(f, "{v}")?;
+            }
+            writeln!(f)?;
+        }
+
+        Ok(())
     }
 }
 
@@ -91,6 +109,19 @@ pub enum Direction {
     Down,
     Left,
     Right,
+}
+
+impl TryFrom<char> for Direction {
+    type Error = String;
+    fn try_from(value: char) -> Result<Self, Self::Error> {
+        match value {
+            '^' => Ok(Direction::Up),
+            '>' => Ok(Direction::Right),
+            'v' => Ok(Direction::Down),
+            '<' => Ok(Direction::Left),
+            c => Err(format!("invalid direction {c}")),
+        }
+    }
 }
 
 impl Direction {
